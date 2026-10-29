@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import express from "express";
 
 import { corsMiddleware } from "./src/shared/config/cors.config.js";
@@ -15,6 +17,15 @@ app.use(corsMiddleware);
 app.use(compressionMiddleware);
 app.use(express.json({ limit: "5mb" }));
 app.use(httpLogger);
+
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "InfraPulse API is healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`InfraPulse server running on port ${PORT}`);
