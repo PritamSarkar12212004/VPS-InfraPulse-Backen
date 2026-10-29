@@ -2,7 +2,6 @@ export const FrontendOriginDevelopment =
   process.env.Frontend_ORIGIN_DEV || "http://localhost:3000";
 export const FrontendOriginProduction =
   process.env.Frontend_ORIGIN_PRO || "https://infrapulse.com";
-export const OTP_SERVICE_URI = process.env.VITE_API_BASE_URL;
 export const requestMethod = [
   "GET",
   "POST",

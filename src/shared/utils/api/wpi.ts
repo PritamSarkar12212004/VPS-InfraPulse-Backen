@@ -1,16 +1,16 @@
 import axios from "axios";
-import { OTP_SERVICE_URI } from "../../secrets/origin.secret.js";
+import { OTP_API_TIMEOUT, OTP_SERVICE_URI } from "../../secrets/otp.secret.js";
 
-export const api = axios.create({
+export const wpi = axios.create({
   baseURL: OTP_SERVICE_URI,
-  timeout: 15_000,
+  timeout: OTP_API_TIMEOUT,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
   },
 });
 
-api.interceptors.response.use(
+wpi.interceptors.response.use(
   (response) => response,
   (error) => {
     if (axios.isAxiosError(error)) {

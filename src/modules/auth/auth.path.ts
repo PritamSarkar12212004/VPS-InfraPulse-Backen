@@ -1,3 +1,3 @@
 export const authPath = {
-  requestOtp: "/request-otp",
+  requestOtp: "/messaging/messages/send",
 };

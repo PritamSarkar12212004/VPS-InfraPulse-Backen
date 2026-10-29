@@ -5,8 +5,9 @@ import express from "express";
 import { corsMiddleware } from "./src/shared/config/cors.config.js";
 import { helmetMiddleware } from "./src/shared/config/helmet.config.js";
 import { compressionMiddleware } from "./src/shared/config/compression.config.js";
-import { httpLogger } from "./src/shared/config/logging.config.js";
+import { httpLogger, logger } from "./src/shared/config/logging.config.js";
 import { PORT } from "./src/shared/secrets/env.secrect.js";
+import { DatabseConnect } from "./src/shared/database/mongoDb.js";
 
 const app = express();
 
@@ -26,9 +27,9 @@ app.get("/health", (_req, res) => {
     uptime: process.uptime(),
   });
 });
-
+await DatabseConnect();
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`InfraPulse server running on port ${PORT}`);
+  logger.info(`InfraPulse server running on port ${PORT}`);
 });
 
 export default app;
