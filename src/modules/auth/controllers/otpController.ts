@@ -7,6 +7,10 @@ import {
   response200,
   response500,
 } from "../../../shared/response/serverResponse.js";
+import { wpi } from "../../../shared/utils/api/wpi.js";
+import { authPath } from "../auth.path.js";
+import { otpTemplateBody } from "../templates/otp.template.js";
+import { OTP_TOKEN } from "../../../shared/secrets/otp.secret.js";
 
 export const requestOtpController = async (
   req: Request,
@@ -25,9 +29,28 @@ export const requestOtpController = async (
         [otpRequestField.name]: name,
         [otpRequestField.phone]: phone,
       });
-      logger.info("New user created:");
+      logger.info({ phone, name }, "New user created:");
     } else {
-      logger.info("User already exists:");
+      logger.info({ phone }, "User already exists:");
+    }
+    try {
+      const externalCall = await wpi.post(
+        authPath.externalRequestOtp,
+        otpTemplateBody({
+          to: phone,
+          otp_code: "123456",
+          uri: "templateUri",
+        }),
+        {
+          headers: {
+            Authorization: `Bearer ${OTP_TOKEN}`,
+          },
+        },
+      );
+      logger.info({ externalCall }, "WhatsApp OTP sent:");
+    } catch (whatsappError) {
+      console.log(whatsappError)
+      logger.error({ err: whatsappError }, "WhatsApp OTP failed:");
     }
 
     await redisSet({

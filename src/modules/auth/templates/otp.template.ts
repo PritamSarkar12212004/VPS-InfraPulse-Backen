@@ -7,10 +7,10 @@ export const otpTemplateBody = ({
   uri,
 }: OtpTemplateBodyParams) => {
   return {
-    to,
+    to: to,
     template: TEMPLATE_OTP_ID,
     variables: {
-      otp_code,
+      otp_code: otp_code,
     },
     media: {
       url: uri,
