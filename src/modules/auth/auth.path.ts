@@ -1,3 +1,4 @@
 export const authPath = {
-  requestOtp: "/messaging/messages/send",
+  externalRequestOtp: "/messaging/messages/send",
+  inappOtpRequest: "/top-request",
 };

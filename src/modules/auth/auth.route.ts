@@ -11,7 +11,7 @@ import { validateRequest } from "../../shared/middlewares/validations/validateRe
 const route = express.Router();
 
 route.post(
-  authPath.requestOtp,
+  authPath.inappOtpRequest,
   IpLimiter,
   phoneRateLimit,
   validateRequest(otpRequestSchema),
