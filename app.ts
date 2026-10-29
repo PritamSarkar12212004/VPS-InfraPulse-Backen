@@ -9,6 +9,8 @@ import { PORT } from "./src/shared/secrets/env.secrect.js";
 import { DatabseConnect } from "./src/shared/database/mongoDb.js";
 import { connectRedis } from "./src/shared/services/redis/redis.config.js";
 import { AuthRoute } from "./src/modules/auth/auth.route.js";
+import { createServer } from "node:http";
+import { initializeSocket } from "./src/shared/services/socket/socket.config.js";
 
 const app = express();
 
@@ -19,6 +21,9 @@ app.use(corsMiddleware);
 app.use(compressionMiddleware);
 app.use(express.json({ limit: "5mb" }));
 app.use(httpLogger);
+
+const httpServer = createServer(app);
+initializeSocket(httpServer);
 
 app.get("/health", (_req, res) => {
   res.status(200).json({
