@@ -8,6 +8,7 @@ import { compressionMiddleware } from "./src/shared/config/compression.config.js
 import { httpLogger, logger } from "./src/shared/config/logging.config.js";
 import { PORT } from "./src/shared/secrets/env.secrect.js";
 import { DatabseConnect } from "./src/shared/database/mongoDb.js";
+import { connectRedis } from "./src/shared/services/redis/redis.config.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get("/health", (_req, res) => {
   });
 });
 await DatabseConnect();
+await connectRedis();
 app.listen(PORT, "0.0.0.0", () => {
   logger.info(`InfraPulse server running on port ${PORT}`);
 });

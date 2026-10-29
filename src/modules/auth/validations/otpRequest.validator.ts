@@ -7,6 +7,9 @@ export const otpRequestSchema = z
       .string()
       .trim()
       .regex(/^[6-9]\d{9}$/, "Invalid Indian mobile number"),
+    [otpRequestField.name]: z
+      .string()
+      .min(2, "Name must be at least 2 characters"),
   })
   .strict();
 

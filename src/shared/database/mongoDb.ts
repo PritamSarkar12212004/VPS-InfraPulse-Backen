@@ -31,7 +31,7 @@ export const DatabseConnect = async (): Promise<void> => {
   });
 
   const MONGO_FULL_URI = `${MONGO_URI_PART1}${MONGO_USERNAME}:${MONGO_PASSWORD}${MONGO_CLUSTER}${MONGO_URI_PART2}`;
-  
+
   await mongoose.connect(MONGO_FULL_URI, {
     serverSelectionTimeoutMS: 10_000,
     connectTimeoutMS: 10_000,
