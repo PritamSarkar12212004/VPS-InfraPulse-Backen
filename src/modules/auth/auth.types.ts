@@ -3,3 +3,18 @@ export interface OtpTemplateBodyParams {
   otp_code: string;
   uri: string;
 }
+export interface RedisFunctionInter {
+  phone: string;
+  otphash: string;
+}
+export interface RedisFunctionVerify {
+  phone: string;
+}
+
+export interface AuthRedisResponse {
+  status: boolean;
+  message: string[];
+  data: {
+    remainingTime: number;
+  } | null;
+}

@@ -13,3 +13,11 @@ export const response200 = ({ res, message, data }: responseInter200) => {
     ...(data !== undefined ? { data } : {}),
   });
 };
+
+export const response404 = ({ res, message, data }: responseInter200) => {
+  res.status(404).json({
+    success: false,
+    message,
+    ...(data !== undefined ? { data } : {}),
+  });
+};

@@ -34,7 +34,7 @@ export const httpLogger = pinoHttp({
   customLogLevel: (res) => {
     if (res.statusCode >= 500) return "error";
     if (res.statusCode >= 400) return "warn";
-    return "info";
+    return "debug"; // successful requests hidden at LOG_LEVEL=info
   },
   customSuccessMessage: () => "✅ request completed",
   customErrorMessage: () => "❌ request failed",

@@ -31,3 +31,7 @@ export const redisDelete = async ({ key }: RedisDelete): Promise<number> => {
 export const redisExists = async ({ key }: RedisKey): Promise<boolean> => {
   return (await redis.exists(key)) === 1;
 };
+
+export const redisTTL = async ({ key }: RedisKey): Promise<number> => {
+  return await redis.ttl(key);
+};

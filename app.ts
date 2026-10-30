@@ -11,6 +11,7 @@ import { connectRedis } from "./src/shared/services/redis/redis.config.js";
 import { AuthRoute } from "./src/modules/auth/auth.route.js";
 import { createServer } from "node:http";
 import { initializeSocket } from "./src/shared/services/socket/socket.config.js";
+import { CpuRoute } from "./src/modules/cpu/cpu.routes.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/v1/auth", AuthRoute);
+app.use("/api/v1/cpu", CpuRoute);
 
 await DatabseConnect();
 await connectRedis();
