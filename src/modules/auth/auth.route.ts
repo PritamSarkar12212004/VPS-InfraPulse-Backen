@@ -10,6 +10,7 @@ import {
   otpVerifySchema,
 } from "./validations/otpRequest.validator.js";
 import { validateRequest } from "../../shared/middlewares/validations/validateRequest.middleware.js";
+import { otpVerifyController } from "./controllers/otpVerifyController.js";
 
 const route = express.Router();
 
@@ -25,6 +26,6 @@ route.post(
   IpLimiter,
   phoneRateLimit,
   validateRequest(otpVerifySchema),
-  requestOtpController,
+  otpVerifyController,
 );
 export { route as AuthRoute };

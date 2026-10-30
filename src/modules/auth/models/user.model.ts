@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       match: [/^[6-9]\d{9}$/, "Invalid Indian mobile number"],
       trim: true,
     },
+    [otpRequestField.refreshTokenHash]: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,

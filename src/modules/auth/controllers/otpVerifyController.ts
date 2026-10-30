@@ -1,35 +1,89 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
+
 import { otpRequestField } from "../fields/otpRequest.field.js";
 import { authRedisOtpVerify } from "../functions/authRedisFunc.js";
 import { authRedisField } from "../fields/authRedisField.js";
+
 import {
   response200,
   response404,
 } from "../../../shared/response/serverResponse.js";
 
+import { User } from "../models/user.model.js";
+
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../../shared/services/jwt/jwtGenerator.js";
+
+import { has } from "../../../shared/functions/encryption/hashing.js";
+
 export const otpVerifyController = async (req: Request, res: Response) => {
   const otp = req.body[otpRequestField.otp];
   const phone = req.body[otpRequestField.phone];
-  const redisResponse = await authRedisOtpVerify({ phone: phone, otp: otp });
+
+  const redisResponse = await authRedisOtpVerify({
+    phone,
+    otp,
+  });
 
   if (redisResponse.message.includes(authRedisField.expired)) {
     return response404({
       message: "OTP expired",
-      res: res,
-      data: null,
-    });
-  } else if (redisResponse.message.includes(authRedisField.invalid)) {
-    return response404({
-      message: "OTP invalid",
-      res: res,
-      data: null,
-    });
-  } else {
-    //  call jwt token
-    return response200({
-      message: "OTP Verify Successfully",
-      res: res,
+      res,
       data: null,
     });
   }
+
+  if (redisResponse.message.includes(authRedisField.invalid)) {
+    return response404({
+      message: "OTP invalid",
+      res,
+      data: null,
+    });
+  }
+
+  const user = await User.findOne({
+    [otpRequestField.phone]: phone,
+  });
+
+  if (!user) {
+    return response404({
+      message: "User Not Exist",
+      res,
+      data: null,
+    });
+  }
+
+  const userId = user._id.toString();
+
+  const accessToken = await generateAccessToken({ userId });
+  const refreshToken = await generateRefreshToken({ userId });
+
+  const hashRefreshToken = await has({
+    value: refreshToken,
+  });
+
+  await User.updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        refreshTokenHash: hashRefreshToken,
+      },
+    },
+  );
+
+  return response200({
+    message: "OTP Verify Successfully",
+    res,
+    data: {
+      accessToken,
+      refreshToken,
+      user: {
+        userId: user._id.toString(),
+        name: user.name,
+        phone: user.phone,
+      },
+    },
+  });
 };
