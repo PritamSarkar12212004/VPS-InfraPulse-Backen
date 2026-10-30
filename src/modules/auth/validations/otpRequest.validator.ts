@@ -13,4 +13,13 @@ export const otpRequestSchema = z
   })
   .strict();
 
+export const otpVerifySchema = z.object({
+  [otpRequestField.otp]: z.string().min(6).max(6).trim(),
+  [otpRequestField.phone]: z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Invalid Indian mobile number"),
+});
+
 export type OtpRequestInput = z.infer<typeof otpRequestSchema>;
+export type otpVerifySchema = z.infer<typeof otpVerifySchema>;

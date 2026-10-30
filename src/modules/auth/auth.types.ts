@@ -10,6 +10,9 @@ export interface RedisFunctionInter {
 export interface RedisFunctionVerify {
   phone: string;
 }
+export interface OtpVerifyInter extends RedisFunctionVerify {
+  otp: string;
+}
 
 export interface AuthRedisResponse {
   status: boolean;

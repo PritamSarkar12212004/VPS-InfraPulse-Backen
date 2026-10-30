@@ -5,7 +5,10 @@ import {
   IpLimiter,
   phoneRateLimit,
 } from "../../shared/services/rateLimit/Limiter.js";
-import { otpRequestSchema } from "./validations/otpRequest.validator.js";
+import {
+  otpRequestSchema,
+  otpVerifySchema,
+} from "./validations/otpRequest.validator.js";
 import { validateRequest } from "../../shared/middlewares/validations/validateRequest.middleware.js";
 
 const route = express.Router();
@@ -17,5 +20,11 @@ route.post(
   validateRequest(otpRequestSchema),
   requestOtpController,
 );
-
+route.post(
+  authPath.inappOtpVeridy,
+  IpLimiter,
+  phoneRateLimit,
+  validateRequest(otpVerifySchema),
+  requestOtpController,
+);
 export { route as AuthRoute };

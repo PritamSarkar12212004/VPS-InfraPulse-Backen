@@ -4,7 +4,6 @@ import { User } from "../models/user.model.js";
 import { logger } from "../../../shared/config/logging.config.js";
 import {
   response200,
-  response404,
   response500,
 } from "../../../shared/response/serverResponse.js";
 import { sendWhatsAppOtp } from "../../../shared/services/whatsapp/whatsapp.service.js";
