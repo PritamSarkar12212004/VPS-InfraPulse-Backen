@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import { otpRequestField } from "../fields/otpRequest.field.js";
 import { authRedisOtpVerify } from "../functions/authRedisFunc.js";
 import { authRedisField } from "../fields/authRedisField.js";
-import { response200, response404 } from "../../../shared/response/serverResponse.js";
+import {
+  response200,
+  response404,
+} from "../../../shared/response/serverResponse.js";
 
 export const otpVerifyController = async (req: Request, res: Response) => {
   const otp = req.body[otpRequestField.otp];
@@ -22,7 +25,7 @@ export const otpVerifyController = async (req: Request, res: Response) => {
       data: null,
     });
   } else {
-    
+    //  call jwt token
     return response200({
       message: "OTP Verify Successfully",
       res: res,
