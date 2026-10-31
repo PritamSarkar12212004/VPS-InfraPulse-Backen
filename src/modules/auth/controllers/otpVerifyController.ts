@@ -22,6 +22,7 @@ import {
   redisSet,
   redisTTL,
 } from "../../../shared/services/redis/functions/redisFunc.js";
+import { REDIS_EXPIRE } from "../../../shared/secrets/database.secrect.js";
 
 export const otpVerifyController = async (req: Request, res: Response) => {
   const otp = req.body[otpRequestField.otp];
@@ -76,8 +77,6 @@ export const otpVerifyController = async (req: Request, res: Response) => {
     value: refreshToken,
   });
 
-  const SESSION_TTL = 7 * 24 * 60 * 60;
-  
   const sessionKey = `auth:session:${sessionId}`;
   await redisSet({
     key: sessionKey,
@@ -85,7 +84,7 @@ export const otpVerifyController = async (req: Request, res: Response) => {
       userId,
       hashRefreshToken,
     }),
-    expirySeconds: SESSION_TTL,
+    expirySeconds: REDIS_EXPIRE,
   });
 
   return response200({

@@ -28,3 +28,17 @@ export const response401 = ({ res, message, data }: responseInter200) => {
     ...(data !== undefined ? { data } : {}),
   });
 };
+export const response503 = ({ res, message, data }: responseInter200) => {
+  res.status(401).json({
+    success: false,
+    message,
+    ...(data !== undefined ? { data } : {}),
+  });
+};
+export const response400 = ({ res, message, data }: responseInter200) => {
+  res.status(401).json({
+    success: false,
+    message,
+    ...(data !== undefined ? { data } : {}),
+  });
+};

@@ -13,6 +13,7 @@ import { createServer } from "node:http";
 import { initializeSocket } from "./src/shared/services/socket/socket.config.js";
 import { CpuRoute } from "./src/modules/cpu/cpu.routes.js";
 import { authMiddleware } from "./src/shared/middlewares/jwt/jtwMiddleWare.js";
+import { RefreshRoute } from "./src/modules/redis/refresh.route.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/v1/auth", AuthRoute);
+app.use("/api/v1/refresh", RefreshRoute);
 app.use("/api", authMiddleware);
 app.use("/api/v1/cpu", CpuRoute);
 
