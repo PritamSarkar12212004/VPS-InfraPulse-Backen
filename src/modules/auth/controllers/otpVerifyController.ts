@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
+import { randomUUID } from "node:crypto";
 
 import { otpRequestField } from "../fields/otpRequest.field.js";
-import { authRedisOtpVerify } from "../functions/authRedisFunc.js";
+import { authRedisOtpVerify } from "../redis/authRedisFunc.js";
 import { authRedisField } from "../fields/authRedisField.js";
 
 import {
@@ -17,6 +18,10 @@ import {
 } from "../../../shared/services/jwt/jwtGenerator.js";
 
 import { has } from "../../../shared/functions/encryption/hashing.js";
+import {
+  redisSet,
+  redisTTL,
+} from "../../../shared/services/redis/functions/redisFunc.js";
 
 export const otpVerifyController = async (req: Request, res: Response) => {
   const otp = req.body[otpRequestField.otp];
@@ -56,22 +61,32 @@ export const otpVerifyController = async (req: Request, res: Response) => {
   }
 
   const userId = user._id.toString();
+  const sessionId = randomUUID();
 
-  const accessToken = await generateAccessToken({ userId });
-  const refreshToken = await generateRefreshToken({ userId });
+  const accessToken = await generateAccessToken({
+    userId: userId,
+    sessionId: sessionId,
+  });
+  const refreshToken = await generateRefreshToken({
+    userId: userId,
+    sessionId: sessionId,
+  });
 
   const hashRefreshToken = await has({
     value: refreshToken,
   });
 
-  await User.updateOne(
-    { _id: user._id },
-    {
-      $set: {
-        refreshTokenHash: hashRefreshToken,
-      },
-    },
-  );
+  const SESSION_TTL = 7 * 24 * 60 * 60;
+  
+  const sessionKey = `auth:session:${sessionId}`;
+  await redisSet({
+    key: sessionKey,
+    value: JSON.stringify({
+      userId,
+      hashRefreshToken,
+    }),
+    expirySeconds: SESSION_TTL,
+  });
 
   return response200({
     message: "OTP Verify Successfully",

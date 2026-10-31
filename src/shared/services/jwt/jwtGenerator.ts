@@ -4,9 +4,11 @@ import { accessKey, jwtConfig, refreshKey } from "./jwt.config.js";
 
 export const generateAccessToken = async ({
   userId,
+  sessionId,
 }: JwtGenerateType): Promise<string> => {
   return new SignJWT({
     type: jwtConfig.access.type,
+    sessionId,
   })
     .setProtectedHeader({
       alg: jwtConfig.algorithm,
@@ -19,9 +21,11 @@ export const generateAccessToken = async ({
 
 export const generateRefreshToken = async ({
   userId,
+  sessionId,
 }: JwtGenerateType): Promise<string> => {
   return new SignJWT({
     type: jwtConfig.refresh.type,
+    sessionId,
   })
     .setProtectedHeader({
       alg: jwtConfig.algorithm,

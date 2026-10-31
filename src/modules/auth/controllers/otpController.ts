@@ -9,7 +9,7 @@ import {
 import { sendWhatsAppOtp } from "../../../shared/services/whatsapp/whatsapp.service.js";
 import { OTP_SERVICE_IMAGE_URI } from "../../../shared/secrets/otp.secret.js";
 import { generateOtpCode } from "../helper/generateOtpCode.js";
-import { authRedisChekk, authRedisset } from "../functions/authRedisFunc.js";
+import { authRedisChekk, authRedisset } from "../redis/authRedisFunc.js";
 
 export const requestOtpController = async (
   req: Request,

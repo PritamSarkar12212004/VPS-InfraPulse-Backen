@@ -1,5 +1,6 @@
 export interface JwtGenerateType {
   userId: string;
+  sessionId: string;
 }
 
 export interface JwtVerifyType {
