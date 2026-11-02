@@ -19,7 +19,6 @@ import {
 
 export const refreshTokenController = async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
-  console.log(refreshToken);
 
   if (!refreshToken || typeof refreshToken !== "string") {
     response400({

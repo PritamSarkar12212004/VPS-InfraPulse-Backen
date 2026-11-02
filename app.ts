@@ -14,6 +14,7 @@ import { initializeSocket } from "./src/shared/services/socket/socket.config.js"
 import { CpuRoute } from "./src/modules/cpu/cpu.routes.js";
 import { authMiddleware } from "./src/shared/middlewares/jwt/jtwMiddleWare.js";
 import { RefreshRoute } from "./src/modules/redis/refresh.route.js";
+import { sessionRoute } from "./src/modules/sessions/session.route.js";
 
 const app = express();
 
@@ -36,9 +37,10 @@ app.get("/health", (_req, res) => {
     uptime: process.uptime(),
   });
 });
-
+  
 app.use("/api/v1/auth", AuthRoute);
 app.use("/api/v1/refresh", RefreshRoute);
+app.use("/api/v1/session", sessionRoute);
 app.use("/api", authMiddleware);
 app.use("/api/v1/cpu", CpuRoute);
 

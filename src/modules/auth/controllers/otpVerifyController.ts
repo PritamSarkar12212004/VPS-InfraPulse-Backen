@@ -4,25 +4,18 @@ import { randomUUID } from "node:crypto";
 import { otpRequestField } from "../fields/otpRequest.field.js";
 import { authRedisOtpVerify } from "../redis/authRedisFunc.js";
 import { authRedisField } from "../fields/authRedisField.js";
-
 import {
   response200,
   response404,
 } from "../../../shared/response/serverResponse.js";
-
 import { User } from "../models/user.model.js";
-
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../../../shared/services/jwt/jwtGenerator.js";
-
 import { has } from "../../../shared/functions/encryption/hashing.js";
-import {
-  redisSet,
-  redisTTL,
-} from "../../../shared/services/redis/functions/redisFunc.js";
 import { REDIS_EXPIRE } from "../../../shared/secrets/database.secrect.js";
+import { redis } from "../../../shared/services/redis/redis.config.js";
 
 export const otpVerifyController = async (req: Request, res: Response) => {
   const otp = req.body[otpRequestField.otp];
@@ -78,14 +71,22 @@ export const otpVerifyController = async (req: Request, res: Response) => {
   });
 
   const sessionKey = `auth:session:${sessionId}`;
-  await redisSet({
-    key: sessionKey,
-    value: JSON.stringify({
-      userId,
-      hashRefreshToken,
-    }),
-    expirySeconds: REDIS_EXPIRE,
-  });
+  const userSessionsKey = `auth:user-sessions:${userId}`;
+
+  await redis
+    .multi()
+    .set(
+      sessionKey,
+      JSON.stringify({
+        userId,
+        hashRefreshToken,
+      }),
+      {
+        EX: REDIS_EXPIRE,
+      },
+    )
+    .sAdd(userSessionsKey, sessionId)
+    .exec();
 
   return response200({
     message: "OTP Verify Successfully",
